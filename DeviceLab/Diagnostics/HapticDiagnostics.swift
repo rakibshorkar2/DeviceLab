@@ -50,11 +50,12 @@ final class HapticDiagnosticsEngine {
 
     /// Custom pulse via Core Haptics (public API).
     func playCustom(intensity: Float, sharpness: Float, duration: Double) throws {
-        guard let hapticEngine else {
-            hapticEngine = try? CHHapticEngine()
-            guard let hapticEngine else { throw HapticError.engineUnavailable }
-            try hapticEngine.start()
+        if hapticEngine == nil {
+            let engine = try CHHapticEngine()
+            try engine.start()
+            hapticEngine = engine
         }
+        guard let hapticEngine else { throw HapticError.engineUnavailable }
         let continuous = CHHapticEvent(
             eventType: .hapticContinuous,
             parameters: [
