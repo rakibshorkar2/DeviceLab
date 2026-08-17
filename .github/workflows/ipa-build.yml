@@ -84,15 +84,18 @@ jobs:
           BUILD_NUMBER="${{ github.run_number }}"
           VERSION="1.0.0"
           TAG="v${VERSION}-build${BUILD_NUMBER}"
+          cat > release-notes.md <<EOF
+          **DeviceLab ${VERSION} — Build ${BUILD_NUMBER}**
+
+          - Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Commit: ${{ github.sha }}
+          - Artifact: DeviceLab-${VERSION}-b${BUILD_NUMBER}-unsigned.ipa (unsigned, sideload with AltStore / SideStore / LiveContainer / Feather)
+
+          This IPA is built with no code signing so sideloading tools can re-sign and install it on your iPhone 15 Pro (iOS 26).
+          EOF
           gh release create "$TAG" "${{ env.ipa_name }}" \
             --repo "${{ github.repository }}" \
             --title "Build $BUILD_NUMBER" \
-            --notes "**DeviceLab $VERSION — Build $BUILD_NUMBER**
-
-- Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-- Commit: ${{ github.sha }}
-- Artifact: ${{ env.ipa_name }} (unsigned, sideload with AltStore / SideStore / LiveContainer / Feather)
-
-This IPA is built with no code signing so sideloading tools can re-sign and install it on your iPhone 15 Pro (iOS 26)." \
+            --notes-file release-notes.md \
             --latest
           echo "Release created: $TAG"
