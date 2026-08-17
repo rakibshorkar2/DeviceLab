@@ -47,6 +47,9 @@ enum DeviceLabActivityKind: String, Codable, Hashable, Sendable {
 }
 
 struct DeviceLabLiveActivityAttributes: ActivityAttributes {
+    /// Satisfies ActivityAttributes.ContentState with the shared content state model.
+    typealias ContentState = DeviceLabLiveActivityContentState
+
     let kind: DeviceLabActivityKind
 }
 
