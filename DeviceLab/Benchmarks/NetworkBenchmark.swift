@@ -20,8 +20,8 @@ struct NetworkBenchmark: Benchmark {
         let up = try await NetworkProbe.measureUpload()
         await progress(1.0)
 
-        let downMbps = down.bytes * 8 / 1_000_000 / down.seconds
-        let upMbps = up.bytes * 8 / 1_000_000 / up.seconds
+        let downMbps = Double(down.bytes) * 8 / 1_000_000 / down.seconds
+        let upMbps = Double(up.bytes) * 8 / 1_000_000 / up.seconds
 
         let latencyScore: Double = {
             guard let latency = probe.latencyMs, latency > 0 else { return 0 }

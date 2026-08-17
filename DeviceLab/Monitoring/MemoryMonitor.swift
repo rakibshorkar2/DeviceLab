@@ -15,7 +15,7 @@ final class MemoryMonitor: BaseMonitor {
     private(set) var totalBytes: UInt64 = 0
     private(set) var pageCounters: (free: UInt64, active: UInt64, inactive: UInt64, wired: UInt64, compressed: UInt64)?
 
-    override init() {
+    init() {
         super.init(kind: .memory)
         totalBytes = ProcessInfo.processInfo.physicalMemory
     }
@@ -96,7 +96,7 @@ final class MemoryMonitor: BaseMonitor {
             UInt64(stats.free_count),
             UInt64(stats.active_count),
             UInt64(stats.inactive_count),
-            UInt64(stats.wired_count),
+            UInt64(stats.wire_count),
             UInt64(stats.compressor_page_count)
         )
     }

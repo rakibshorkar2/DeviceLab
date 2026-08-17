@@ -53,7 +53,7 @@ struct DashboardView: View {
         HStack(spacing: 14) {
             ZStack {
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(.tint.gradient)
+                    .fill(Color.accentColor.gradient)
                     .frame(width: 52, height: 52)
                 Image(systemName: "waveform.path.ecg")
                     .font(.title2)

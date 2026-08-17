@@ -15,7 +15,7 @@ final class CPUMonitor: BaseMonitor {
     private(set) var ownPercent: Double?
     private(set) var ownCumulativeTime: TimeInterval = 0
 
-    override init() {
+    init() {
         super.init(kind: .cpu)
     }
 

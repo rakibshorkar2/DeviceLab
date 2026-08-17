@@ -8,7 +8,7 @@ import Foundation
 final class ThermalMonitor: BaseMonitor {
     private(set) var thermalState: ProcessInfo.ThermalState = .nominal
 
-    override init() {
+    init() {
         super.init(kind: .thermal)
     }
 
@@ -44,7 +44,7 @@ final class ThermalMonitor: BaseMonitor {
         ))
     }
 
-    static func name(for state: ProcessInfo.ThermalState) -> String {
+    nonisolated static func name(for state: ProcessInfo.ThermalState) -> String {
         switch state {
         case .nominal: return "Nominal"
         case .fair: return "Fair"
@@ -54,7 +54,7 @@ final class ThermalMonitor: BaseMonitor {
         }
     }
 
-    static func explanation(for state: ProcessInfo.ThermalState) -> String {
+    nonisolated static func explanation(for state: ProcessInfo.ThermalState) -> String {
         switch state {
         case .nominal: return "Normal operating temperature"
         case .fair: return "Slightly elevated"

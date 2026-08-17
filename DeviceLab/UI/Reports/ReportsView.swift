@@ -76,7 +76,7 @@ struct ReportsView: View {
                     DetailLine(text: "Per-app CPU/GPU/RAM, battery health, cycle count and charger wattage are labeled as restricted — iOS does not expose them to third-party apps.")
                 }
 
-                Section("Export") {
+                Section {
                     ForEach(ExportManager.Format.allCases) { format in
                         Button {
                             export(format)
@@ -94,6 +94,8 @@ struct ReportsView: View {
                             .font(.caption)
                             .foregroundStyle(.red)
                     }
+                } header: {
+                    Text("Export")
                 } footer: {
                     Text("Reports contain only real data collected locally. Nothing leaves the device unless you share the file yourself.")
                 }

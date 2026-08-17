@@ -28,8 +28,8 @@ final class ChargingMonitor: BaseMonitor {
 
     /// Pure charge-rate estimation (%/hour) from level deltas. Testable without hardware.
     static func estimateRate(sessionStart: Date, now: Date, startLevel: Double?, currentLevel: Double?) -> Double? {
-        guard let startLevel, startLevel >= 0, let currentLevel, let start = sessionStart else { return nil }
-        let hours = now.timeIntervalSince(start) / 3600
+        guard let startLevel, startLevel >= 0, let currentLevel else { return nil }
+        let hours = now.timeIntervalSince(sessionStart) / 3600
         guard hours >= 0.02 else { return nil }
         return (currentLevel - startLevel) / hours
     }
@@ -37,7 +37,7 @@ final class ChargingMonitor: BaseMonitor {
     private var lastLevel: Double?
     private var lastLevelDate: Date?
 
-    override init() {
+    init() {
         super.init(kind: .charging)
     }
 
@@ -65,13 +65,13 @@ final class ChargingMonitor: BaseMonitor {
             chargingDuration = sessionStart.map { now.timeIntervalSince($0) }
 
             if let start = sessionStart {
-                ratePerHour = Self.estimateRate(sessionStart: start, now: now, startLevel: startLevel, currentLevel: level)
+                ratePerHour = Self.estimateRate(sessionStart: start, now: now, startLevel: sessionStartLevel, currentLevel: level)
             }
             if let level, let lastLevel, let lastLevelDate {
                 let hours = now.timeIntervalSince(lastLevelDate) / 3600
                 if hours >= 0.02 {
                     let shortRate = (level - lastLevel) / hours
-                    if let ratePerHour, abs(shortRate - ratePerHour) / ratePerHour < 2.0 {
+                    if let currentRate = ratePerHour, abs(shortRate - currentRate) / currentRate < 2.0 {
                         ratePerHour = shortRate
                     } else if ratePerHour == nil {
                         ratePerHour = shortRate

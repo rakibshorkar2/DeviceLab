@@ -25,7 +25,7 @@ final class NetworkMonitor: BaseMonitor {
     private(set) var isConstrained = false
     private(set) var lastProbeAt: Date?
 
-    override init() {
+    init() {
         super.init(kind: .network)
         pathMonitor.pathUpdateHandler = { [weak self] path in
             Task { @MainActor in
@@ -89,7 +89,7 @@ final class NetworkMonitor: BaseMonitor {
         } else {
             interfaceLabel = "Offline"
         }
-        refresh()
+        Task { await refresh() }
     }
 
     override func refresh() async {

@@ -11,7 +11,7 @@ final class BatteryMonitor: BaseMonitor {
     private(set) var batteryState: UIDevice.BatteryState = .unknown
     private(set) var isLowPowerMode = false
 
-    override init() {
+    init() {
         super.init(kind: .battery)
     }
 

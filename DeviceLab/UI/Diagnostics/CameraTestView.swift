@@ -82,8 +82,8 @@ struct CameraTestView: View {
                     .buttonStyle(.bordered)
                     .tint(isRecording ? .red : .blue)
 
-                    if let duration = engine.recordedDuration, duration > 0, !isRecording {
-                        Text("Last recording: \(duration.durationLabel)")
+                    if engine.recordedDuration > 0, !isRecording {
+                        Text("Last recording: \(engine.recordedDuration.durationLabel)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -185,7 +185,7 @@ struct CameraTestView: View {
             do {
                 try engine.startRecording()
                 isRecording = true
-                recordingTask = Task { [weak self] in
+                recordingTask = Task {
                     while !Task.isCancelled {
                         try? await Task.sleep(for: .seconds(1))
                     }

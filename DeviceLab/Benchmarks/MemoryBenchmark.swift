@@ -1,4 +1,5 @@
 import Foundation
+import Compression
 import Darwin
 
 /// Memory benchmark measuring DeviceLab-controlled workloads:

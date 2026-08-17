@@ -102,9 +102,9 @@ struct LiveActivitiesSettingsView: View {
 
     private func toggleBinding(_ kind: DeviceLabActivityKind) -> Binding<Bool> {
         Binding(
-            get: { appState.settings.settings.liveActivityKinds[kind] ?? false },
+            get: { appState.settings.settings.liveActivityKinds[kind.metricKind] ?? false },
             set: { enabled in
-                appState.settings.update { $0.liveActivityKinds[kind] = enabled }
+                appState.settings.update { $0.liveActivityKinds[kind.metricKind] = enabled }
                 if enabled {
                     appState.liveActivityManager.start(kind: kind, values: appState.systemMonitor.deviceData.liveValues)
                 } else {

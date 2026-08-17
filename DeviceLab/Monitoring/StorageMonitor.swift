@@ -14,7 +14,7 @@ final class StorageMonitor: BaseMonitor {
     private(set) var temporaryBytes: UInt64 = 0
     private(set) var fileCount: Int = 0
 
-    override init() {
+    init() {
         super.init(kind: .storage)
         if let info = Self.volumeInfo() {
             totalBytes = UInt64(info.total)
@@ -71,7 +71,7 @@ final class StorageMonitor: BaseMonitor {
         ))
     }
 
-    static func volumeInfo() -> (total: Int64, available: Int64)? {
+    nonisolated static func volumeInfo() -> (total: Int64, available: Int64)? {
         let home = URL(fileURLWithPath: NSHomeDirectory())
         guard let values = try? home.resourceValues(forKeys: [.volumeTotalCapacityKey, .volumeAvailableCapacityForImportantUsageKey]),
               let total = values.volumeTotalCapacity,

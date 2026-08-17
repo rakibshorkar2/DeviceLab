@@ -57,7 +57,7 @@ struct CPUBenchmark: Benchmark {
             let multiUnits = Self.runMultiInteger()
             let multiNormalized = BenchmarkMeasurement.normalizedScore(
                 workPerSecond: multiUnits,
-                reference: Self.multiReference
+                reference: multiReference
             )
             multiScores.append(multiNormalized)
             step += 1
@@ -66,7 +66,7 @@ struct CPUBenchmark: Benchmark {
 
         let single = singleScores.reduce(0, +) / Double(singleScores.count)
         let multi = multiScores.reduce(0, +) / Double(multiScores.count)
-        let consistency = consistencyOf(singleScores)
+        let consistency = Self.consistencyOf(singleScores)
 
         let detail = """
         Single-thread score: \(Int(single))
@@ -94,7 +94,7 @@ struct CPUBenchmark: Benchmark {
 
     // MARK: Individual workloads (units = "work units per second")
 
-    static func runSingle(_ workload: Workload) -> Double {
+    private static func runSingle(_ workload: Workload) -> Double {
         switch workload {
         case .integer:
             return Self.integerWorkload()
@@ -149,7 +149,7 @@ struct CPUBenchmark: Benchmark {
         let seconds = BenchmarkMeasurement.measureSeconds {
             for _ in 0..<iterations {
                 let digest = SHA256.hash(data: chunk)
-                total = digest.count
+                total = digest.reduce(0) { $0 + Int($1) }
             }
         }
         consume(UInt64(total))
@@ -279,9 +279,9 @@ struct CPUBenchmark: Benchmark {
     }
 
     static func consistencyOf(_ scores: [Double]) -> Double {
-        guard let min = scores.min(), let mean = scores.reduce(0, +) / Double(scores.count), mean > 0 else {
-            return 0
-        }
+        guard let min = scores.min(), !scores.isEmpty else { return 0 }
+        let mean = scores.reduce(0, +) / Double(scores.count)
+        guard mean > 0 else { return 0 }
         return min / mean * 100
     }
 }

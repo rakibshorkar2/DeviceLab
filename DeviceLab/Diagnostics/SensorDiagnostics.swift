@@ -22,11 +22,21 @@ final class SensorDiagnosticsEngine {
     private(set) var proximitySensorAvailable = false
 
     // Live data
-    private(set) var accelX = 0.0, accelY = 0.0, accelZ = 0.0
-    private(set) var gyroX = 0.0, gyroY = 0.0, gyroZ = 0.0
-    private(set) var magX = 0.0, magY = 0.0, magZ = 0.0
-    private(set) var roll = 0.0, pitch = 0.0, yaw = 0.0
-    private(set) var userAccelX = 0.0, userAccelY = 0.0, userAccelZ = 0.0
+    private(set) var accelX = 0.0
+    private(set) var accelY = 0.0
+    private(set) var accelZ = 0.0
+    private(set) var gyroX = 0.0
+    private(set) var gyroY = 0.0
+    private(set) var gyroZ = 0.0
+    private(set) var magX = 0.0
+    private(set) var magY = 0.0
+    private(set) var magZ = 0.0
+    private(set) var roll = 0.0
+    private(set) var pitch = 0.0
+    private(set) var yaw = 0.0
+    private(set) var userAccelX = 0.0
+    private(set) var userAccelY = 0.0
+    private(set) var userAccelZ = 0.0
     private(set) var altitudeMeters: Double?
     private(set) var pressurekPa: Double?
     private(set) var stepCount: Int?

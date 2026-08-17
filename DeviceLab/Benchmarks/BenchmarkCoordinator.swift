@@ -75,7 +75,7 @@ final class BenchmarkCoordinator {
     }
 
     func cancel() {
-        cancellation?.cancel()
+        Task { await cancellation?.cancel() }
     }
 
     private func finish(benchmark: Benchmark, outcome: BenchmarkOutcome) {

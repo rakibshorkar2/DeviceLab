@@ -63,7 +63,9 @@ enum NetworkProbe {
         var result = NetworkProbeResult(measuredAt: Date(), attempts: attempts, successes: successes)
         if let mean = mean(samples) {
             result.latencyMs = mean * 1000
-            result.jitterMs = meanAbsoluteDeviation(samples) * 1000
+            if let jitter = meanAbsoluteDeviation(samples) {
+                result.jitterMs = jitter * 1000
+            }
         }
         if attempts > 0 {
             result.packetLossPercent = Double(attempts - successes) / Double(attempts) * 100
@@ -152,7 +154,7 @@ enum NetworkProbe {
         var body = Data(count: byteCount)
         body.withUnsafeMutableBytes { ptr in
             if let base = ptr.baseAddress {
-                let rng = SystemRandomNumberGenerator()
+                var rng = SystemRandomNumberGenerator()
                 (0..<byteCount).forEach { index in
                     base.storeBytes(of: UInt8.random(in: 0...255, using: &rng), toByteOffset: index, as: UInt8.self)
                 }

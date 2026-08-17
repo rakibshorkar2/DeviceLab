@@ -20,11 +20,7 @@ struct DeviceInfo {
             ptr.withMemoryRebound(to: CChar.self, capacity: Int(_SYS_NAMELEN)) { String(cString: $0) }
         }
 
-        if #available(iOS 16.0, *) {
-            marketingName = UTDevice.current.modelName
-        } else {
-            marketingName = Self.marketingName(for: machine)
-        }
+        marketingName = Self.marketingName(for: machine)
         modelIdentifier = machine
         systemName = UIDevice.current.systemName
         systemVersion = UIDevice.current.systemVersion
@@ -39,7 +35,7 @@ struct DeviceInfo {
 
     var memoryGB: Double { Double(physicalMemoryBytes) / 1_073_741_824 }
 
-    /// Fallback marketing names for identifiers not covered by UTDevice.
+    /// Marketing names derived from the hardware model identifier (sysctl).
     static func marketingName(for identifier: String) -> String {
         switch identifier {
         case "iPhone15,2": return "iPhone 15 Pro"

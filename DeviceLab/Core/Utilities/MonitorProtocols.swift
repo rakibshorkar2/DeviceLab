@@ -17,21 +17,21 @@ protocol DeviceMonitor: AnyObject {
 }
 
 @MainActor
-open class BaseMonitor: DeviceMonitor {
-    public let kind: MetricKind
-    public private(set) var availability: MonitorAvailability = .available
-    public private(set) var snapshot: MetricSnapshot
-    public private(set) var isRunning = false
-    public var samplingInterval: Duration = .seconds(5)
+class BaseMonitor: DeviceMonitor {
+    let kind: MetricKind
+    private(set) var availability: MonitorAvailability = .available
+    private(set) var snapshot: MetricSnapshot
+    private(set) var isRunning = false
+    var samplingInterval: Duration = .seconds(5)
 
     private var task: Task<Void, Never>?
 
-    public init(kind: MetricKind) {
+    init(kind: MetricKind) {
         self.kind = kind
         self.snapshot = MetricSnapshot.placeholder(kind: kind)
     }
 
-    open func start() {
+    func start() {
         guard !isRunning else { return }
         isRunning = true
         task = Task { [weak self] in
@@ -43,15 +43,15 @@ open class BaseMonitor: DeviceMonitor {
         }
     }
 
-    open func stop() {
+    func stop() {
         task?.cancel()
         task = nil
         isRunning = false
     }
 
-    open func refresh() async {}
+    func refresh() async {}
 
-    public func setAvailability(_ value: MonitorAvailability) {
+    func setAvailability(_ value: MonitorAvailability) {
         availability = value
         if case .unavailable(let reason) = value {
             snapshot = MetricSnapshot.unavailable(kind: kind, reason: reason)
@@ -60,7 +60,7 @@ open class BaseMonitor: DeviceMonitor {
         }
     }
 
-    public func updateSnapshot(_ newSnapshot: MetricSnapshot) {
+    func updateSnapshot(_ newSnapshot: MetricSnapshot) {
         snapshot = newSnapshot
     }
 }

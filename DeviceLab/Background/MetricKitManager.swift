@@ -27,10 +27,10 @@ final class MetricKitManager: NSObject, MXMetricManagerSubscriber {
     }
 
     nonisolated func didReceive(_ payloads: [MXMetricPayload]) {
-        let cpuSeconds = payloads.compactMap { $0.cpuMetrics?.cumulativeCPUTime.doubleValue }.reduce(0, +)
-        let instructions = payloads.compactMap { $0.cpuMetrics?.cumulativeInstructionCount.doubleValue }.reduce(0, +)
-        let gpuSeconds = payloads.compactMap { $0.gpuMetrics?.cumulativeGPUTime.doubleValue }.reduce(0, +)
-        let peakMB = payloads.compactMap { $0.memoryMetrics?.peakMemoryUsage.doubleValue }.max() ?? 0
+        let cpuSeconds = payloads.compactMap { $0.cpuMetrics?.cumulativeCPUTime.converted(to: .seconds).value }.reduce(0, +)
+        let instructions = payloads.compactMap { $0.cpuMetrics?.cumulativeCPUInstructions.value }.reduce(0, +)
+        let gpuSeconds = payloads.compactMap { $0.gpuMetrics?.cumulativeGPUTime.converted(to: .seconds).value }.reduce(0, +)
+        let peakMB = payloads.compactMap { $0.memoryMetrics?.peakMemoryUsage.converted(to: .bytes).value }.max() ?? 0
         let at = Date()
 
         Task { @MainActor [weak self] in

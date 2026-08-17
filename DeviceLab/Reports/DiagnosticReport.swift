@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 /// Lightweight report data types (decoupled from SwiftData models).
 struct ReportBatterySession: Sendable, Identifiable {

@@ -119,15 +119,13 @@ final class MetalGPUBenchmarkEngine: @unchecked Sendable {
             throw BenchmarkError.metalUnavailable
         }
 
-        if let ptr = a.contents().assumingMemoryBound(to: Float.self) {
-            for i in 0..<(byteSize / MemoryLayout<Float>.stride) {
-                ptr[i] = Float(i % 97) * 0.01
-            }
+        let ptr = a.contents().assumingMemoryBound(to: Float.self)
+        for i in 0..<(byteSize / MemoryLayout<Float>.stride) {
+            ptr[i] = Float(i % 97) * 0.01
         }
-        if let ptr = b.contents().assumingMemoryBound(to: Float.self) {
-            for i in 0..<(byteSize / MemoryLayout<Float>.stride) {
-                ptr[i] = Float(i % 53) * 0.01
-            }
+        let ptrB = b.contents().assumingMemoryBound(to: Float.self)
+        for i in 0..<(byteSize / MemoryLayout<Float>.stride) {
+            ptrB[i] = Float(i % 53) * 0.01
         }
 
         let start = Date()

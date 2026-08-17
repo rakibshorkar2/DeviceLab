@@ -13,7 +13,7 @@ final class GPUMonitor: BaseMonitor {
     private(set) var lastBenchmarkFrameTime: Double?
     private(set) var lastBenchmarkAt: Date?
 
-    override init() {
+    init() {
         super.init(kind: .gpu)
         setAvailability(.unavailable("System GPU attribution is not available through public third-party iOS APIs."))
     }

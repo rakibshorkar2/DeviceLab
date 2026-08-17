@@ -39,12 +39,12 @@ final class NetworkDiagnosticsEngine {
             phase = .download
             let down = try await NetworkProbe.measureDownload()
             speed.downBytes = down.bytes
-            speed.downMbps = down.bytes * 8 / 1_000_000 / down.seconds
+            speed.downMbps = Double(down.bytes) * 8 / 1_000_000 / down.seconds
 
             phase = .upload
             let up = try await NetworkProbe.measureUpload()
             speed.upBytes = up.bytes
-            speed.upMbps = up.bytes * 8 / 1_000_000 / up.seconds
+            speed.upMbps = Double(up.bytes) * 8 / 1_000_000 / up.seconds
 
             speed.measuredAt = Date()
         } catch {

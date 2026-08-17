@@ -18,7 +18,8 @@ final class BackgroundScheduler {
         self.settings = settings
         BGTaskScheduler.shared.register(forTaskWithIdentifier: AppConstants.backgroundTaskIdentifier, using: nil) { [weak self] task in
             Task { @MainActor in
-                self?.handleAppRefresh(task: task)
+                guard let appRefreshTask = task as? BGAppRefreshTask else { return }
+                self?.handleAppRefresh(task: appRefreshTask)
             }
         }
     }

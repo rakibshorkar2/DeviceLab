@@ -96,8 +96,13 @@ final class AudioDiagnosticsEngine: NSObject, AVAudioRecorderDelegate {
     }
 
     func requestPermission() async -> Bool {
-        permissionGranted = await AVAudioSession.sharedInstance().requestRecordPermission()
-        return permissionGranted
+        let granted = await withCheckedContinuation { continuation in
+            AVAudioSession.sharedInstance().requestRecordPermission { allowed in
+                continuation.resume(returning: allowed)
+            }
+        }
+        permissionGranted = granted
+        return granted
     }
 
     private func configureSession() {

@@ -9,7 +9,7 @@ import ActivityKit
 // coexist, using ActivityKit's built-in rules for Dynamic Island
 // presentation and relevance scores.
 
-enum DeviceLabActivityKind: String, Codable, Hashable, Sendable {
+enum DeviceLabActivityKind: String, Codable, Hashable, CaseIterable, Identifiable, Sendable {
     case cpu
     case memory
     case gpu
@@ -18,6 +18,8 @@ enum DeviceLabActivityKind: String, Codable, Hashable, Sendable {
     case thermal
     case network
     case device
+
+    var id: String { rawValue }
 
     var displayName: String {
         switch self {

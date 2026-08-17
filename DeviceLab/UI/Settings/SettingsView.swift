@@ -80,13 +80,13 @@ struct SettingsView: View {
         Section {
             Stepper(value: Binding(
                 get: { Double(appState.settings.settings.cpuBenchmarkDuration) },
-                set: { newValue in appState.settings.update { $0.cpuBenchmarkDuration = Int(newValue) } }
+                set: { newValue in appState.settings.update { $0.cpuBenchmarkDuration = newValue } }
             ), in: 2...15, step: 1) {
                 LabeledRow(label: "CPU test duration", value: "\(Int(appState.settings.settings.cpuBenchmarkDuration)) s")
             }
             Stepper(value: Binding(
                 get: { Double(appState.settings.settings.gpuBenchmarkDuration) },
-                set: { newValue in appState.settings.update { $0.gpuBenchmarkDuration = Int(newValue) } }
+                set: { newValue in appState.settings.update { $0.gpuBenchmarkDuration = newValue } }
             ), in: 2...15, step: 1) {
                 LabeledRow(label: "GPU test duration", value: "\(Int(appState.settings.settings.gpuBenchmarkDuration)) s")
             }

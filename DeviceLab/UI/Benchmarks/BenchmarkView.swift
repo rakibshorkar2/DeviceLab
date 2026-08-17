@@ -60,7 +60,7 @@ struct BenchmarkView: View {
                     )
                 }
 
-                Section("History") {
+                Section {
                     let results = appState.historyStore.benchmarkResults()
                     if results.isEmpty {
                         Text("No benchmark results yet.")
@@ -81,6 +81,8 @@ struct BenchmarkView: View {
                             }
                         }
                     }
+                } header: {
+                    Text("History")
                 } footer: {
                     Text("Scores are DeviceLab-normalized (0–10,000). The thermal safeguard halts benchmarks when the device is seriously hot. Sizes can be configured in Settings → Benchmark.")
                 }

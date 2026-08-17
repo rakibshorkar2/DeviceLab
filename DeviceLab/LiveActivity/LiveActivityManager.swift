@@ -56,14 +56,15 @@ final class LiveActivityManager {
     // MARK: Start / stop
 
     func start(kind: DeviceLabActivityKind, values: LiveMetricValues) {
-        guard settings.isLiveActivityEnabled(kind), ActivityAuthorizationInfo().areActivitiesEnabled else {
+        guard settings.isLiveActivityEnabled(kind.metricKind), ActivityAuthorizationInfo().areActivitiesEnabled else {
             lastUpdateReason = "Live Activity for \(kind.displayName) not enabled (check Settings → Live Activities) or unavailable."
             return
         }
         let state = values.contentState(for: kind)
         do {
             if let existing = activities[kind] {
-                try existing.update(ActivityContent(state: state, staleDate: staleDate(), relevanceScore: relevance(for: kind)))
+                let content = ActivityContent(state: state, staleDate: staleDate(), relevanceScore: relevance(for: kind))
+                Task { try? await existing.update(content) }
                 activities[kind] = existing
             } else {
                 let activity = try Activity.request(
@@ -84,7 +85,7 @@ final class LiveActivityManager {
 
     func startAll(values: LiveMetricValues) {
         for kind in DeviceLabActivityKind.allCases {
-            if settings.isLiveActivityEnabled(kind) {
+            if settings.isLiveActivityEnabled(kind.metricKind) {
                 start(kind: kind, values: values)
             }
         }
@@ -93,7 +94,7 @@ final class LiveActivityManager {
     func stop(kind: DeviceLabActivityKind) {
         for activity in Activity<DeviceLabLiveActivityAttributes>.activities
         where activity.attributes.kind == kind {
-            activity.end(nil, dismissalPolicy: .immediate)
+            Task { try? await activity.end(nil, dismissalPolicy: .immediate) }
         }
         activities[kind] = nil
         lastPush[kind] = nil
@@ -104,7 +105,7 @@ final class LiveActivityManager {
 
     func stopAll() {
         for activity in Activity<DeviceLabLiveActivityAttributes>.activities {
-            activity.end(nil, dismissalPolicy: .immediate)
+            Task { try? await activity.end(nil, dismissalPolicy: .immediate) }
         }
         activities = [:]
         lastPush = [:]
@@ -120,14 +121,17 @@ final class LiveActivityManager {
         for (kind, activity) in activities {
             let state = values.contentState(for: kind)
             guard shouldPush(kind: kind, newState: state) else { continue }
-            do {
-                try activity.update(ActivityContent(state: state, staleDate: staleDate(), relevanceScore: relevance(for: kind)))
-                lastPush[kind] = Date()
-                lastState[kind] = state
-                lastUpdate = Date()
-                lastUpdateReason = "Updated \(kind.displayName)"
-            } catch {
-                rejectedUpdateCount += 1
+            let content = ActivityContent(state: state, staleDate: staleDate(), relevanceScore: relevance(for: kind))
+            Task {
+                do {
+                    try await activity.update(content)
+                    lastPush[kind] = Date()
+                    lastState[kind] = state
+                    lastUpdate = Date()
+                    lastUpdateReason = "Updated \(kind.displayName)"
+                } catch {
+                    rejectedUpdateCount += 1
+                }
             }
         }
     }
