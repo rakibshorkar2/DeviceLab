@@ -63,7 +63,7 @@ struct LiveActivitiesSettingsView: View {
                 }
             }
 
-            Section("Dynamic Island priority") {
+            Section {
                 ForEach(appState.settings.settings.liveActivityPriority) { kind in
                     HStack {
                         Image(systemName: kind.symbolName)
@@ -84,6 +84,8 @@ struct LiveActivitiesSettingsView: View {
                         .disabled(!canMove(kind, by: 1))
                     }
                 }
+            } header: {
+                Text("Dynamic Island priority")
             } footer: {
                 Text("Higher priority → higher relevance score → the system is more likely to show that activity in the Dynamic Island when multiple are active.")
             }

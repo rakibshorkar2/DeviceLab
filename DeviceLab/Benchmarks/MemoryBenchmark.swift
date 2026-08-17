@@ -60,7 +60,19 @@ struct MemoryBenchmark: Benchmark {
         // Compression workload
         let compressData = Data(repeating: 0x7B, count: 64 * 1024 * 1024)
         let compressSeconds = try BenchmarkMeasurement.measureSeconds {
-            _ = try compressData.compressed(using: .zlib)
+            let destinationSize = 2 * compressData.count
+            let destination = UnsafeMutablePointer<UInt8>.allocate(capacity: destinationSize)
+            defer { destination.deallocate() }
+            _ = compressData.withUnsafeBytes { sourcePtr in
+                compression_encode_buffer(
+                    destination,
+                    destinationSize,
+                    sourcePtr.baseAddress!.assumingMemoryBound(to: UInt8.self),
+                    compressData.count,
+                    nil,
+                    COMPRESSION_ZLIB
+                )
+            }
         }
         await progress(0.9)
 
